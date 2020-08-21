@@ -1,5 +1,8 @@
+
 const Assignment=require('../models/assignment');
+
 const Teacher=require('../models/teacher');
+
 const mongoose=require('mongoose');
 
 exports.getAssignments=async(req,res,next)=>{

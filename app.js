@@ -12,9 +12,11 @@ const bodyParser=require('body-parser');
 
 const assignmentRoutes=require('./routes/assignment');
 
-const authRoutes=require('./routes/teacherAuth');
+const authTeacher=require('./routes/teacherAuth');
 
-const studentRoutes=require('./routes/studentAuth');
+const authStudent=require('./routes/studentAuth');
+
+const assignmentStudent=require('./routes/student');
 
 
 app.use(bodyParser.json());
@@ -27,16 +29,18 @@ app.use((req,res,next)=>{
 
 });
 
-app.use('/api/teacher',authRoutes);
+app.use('/api/teacher',authTeacher);
 
-app.use('/api/student',studentRoutes);
+app.use('/api/student',authStudent);
 
 app.use('/api/assignment',assignmentRoutes);
+
+app.use('/api/myassignment',assignmentStudent);
 
 mongoose.connect(process.env.DB_CONNECT).then(result=>{
 	console.log('connected to db')
 	console.log('api is running on port 4000')
-	app.listen(4000);
+	app.listen(3001);
 
 }).catch(err=>{
 	console.log(err);

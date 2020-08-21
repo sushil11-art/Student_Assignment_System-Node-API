@@ -36,6 +36,10 @@ exports.register= async(req,res)=>{
 
 			if(emailExist) return res.status(400).send('Email already exist');
 
+			const rollNoExist=await Student.findOne({college_rollno:req.body.college_rollno});
+
+			if(rollNoExist) return res.status(400).send('Student with that roll no already exist.Pick a new one');
+
 
 			// now hased the password before saving the user
 
@@ -82,7 +86,7 @@ exports.register= async(req,res)=>{
 
 			//check whether password matches or not
 
-			const validPass=await bcrypt.compare(req.body.password,teacher.password);
+			const validPass=await bcrypt.compare(req.body.password,student.password);
 
 			if(!validPass) return res.status(400).send('Invalid password');
 

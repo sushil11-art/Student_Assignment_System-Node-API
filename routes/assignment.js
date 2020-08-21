@@ -1,7 +1,8 @@
 const express=require('express');
 
 const router=express.Router();
-const verifyTeacher=require('./verifyTeacher');
+
+const verifyTeacher=require('../middlewares/verifyTeacher');
 
 const assignmentController=require('../controllers/assignment');
 

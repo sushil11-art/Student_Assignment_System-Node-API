@@ -49,14 +49,23 @@ const studentSchema=new Schema({
 		assignments:[
 		{
 		type:Schema.Types.ObjectId,
-		ref:'Assignment'
+		ref:'Assignment',
 	}
 	]
 }
 
 });
 
+studentSchema.methods.addToMyList=function(assignment){
+
+	
+
+
+};
+
 module.exports=mongoose.model('Student',studentSchema);
+
+
 
 
 // const mongoose=require('mongoose')

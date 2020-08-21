@@ -2,12 +2,12 @@ const express=require('express')
 
 const router=express.Router();
 
-const studentController=require('../controllers/studentController');
+const studentAuth=require('../controllers/studentAuth');
 
 
-router.post('/register',studentController.register);
+router.post('/register',studentAuth.register);
 
 
-router.post('/login',studentController.login);
+router.post('/login',studentAuth.login);
 
 module.exports=router;
