@@ -37,6 +37,7 @@ exports.register= async(req,res)=>{
 			if(emailExist) return res.status(400).send('Email already exist');
 
 			const rollNoExist=await Student.findOne({college_rollno:req.body.college_rollno});
+			
 
 			if(rollNoExist) return res.status(400).send('Student with that roll no already exist.Pick a new one');
 
@@ -61,6 +62,9 @@ exports.register= async(req,res)=>{
 
 				try{
 					const savedStudent= await student.save();
+
+					console.log('Yes now i amworking')
+
 					res.json({mesaage:'user created successfully',savedStudent:savedStudent});
 				}
 				catch(err){

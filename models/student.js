@@ -48,9 +48,10 @@ const studentSchema=new Schema({
 	my_assignments:{
 		assignments:[
 		{
-		type:Schema.Types.ObjectId,
+		type:Object,
 		ref:'Assignment',
-	}
+
+		}
 	]
 }
 
