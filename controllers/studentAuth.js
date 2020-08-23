@@ -28,18 +28,22 @@ exports.register= async(req,res)=>{
 
 			const {error} = schema.validate(req.body);
 
-			if(error) return res.status(400).send(error.details[0].message);
+			// console.log(error);
+
+			// if(error) return res.status(400).send(error.details[0].message);
+
+			 if(error) return res.status(422).json({message:error.details[0].message});
 
 			//check whether the user is in database or not
 
 			const emailExist=await Student.findOne({email:req.body.email});
 
-			if(emailExist) return res.status(400).send('Email already exist');
+			if(emailExist) return res.status(422).json({message:'Email already exist'});
 
 			const rollNoExist=await Student.findOne({college_rollno:req.body.college_rollno});
-			
+		
 
-			if(rollNoExist) return res.status(400).send('Student with that roll no already exist.Pick a new one');
+			if(rollNoExist) return res.status(422).json({message:'Student with that roll no already exist.Pick a new one'});
 
 
 			// now hased the password before saving the user
@@ -65,11 +69,13 @@ exports.register= async(req,res)=>{
 
 					console.log('Yes now i amworking')
 
-					res.json({mesaage:'user created successfully',savedStudent:savedStudent});
+					res.status(201).json({mesaage:'user created successfully',savedStudent:savedStudent});
 				}
 				catch(err){
-					res.status(400).send(err);
-				}
+		if(!err.statusCode){
+				err.statusCode=500;
+				next(err);
+			}				}
 
  };
 
@@ -80,19 +86,19 @@ exports.register= async(req,res)=>{
 
 			const {error} = schema.validate(req.body);
 
-			if(error) return res.status(400).send(error.details[0].message);
+			if(error) return res.status(422).json({message:error.details[0].message});
 
 			//check whether the user is in database or not
 
 			const student=await Student.findOne({email:req.body.email});
 
-			if(!student) return res.status(400).send('Email or password doesnot matches');
+			if(!student) return res.status(422).json({message:'Email or password doesnot matches'});
 
 			//check whether password matches or not
 
 			const validPass=await bcrypt.compare(req.body.password,student.password);
 
-			if(!validPass) return res.status(400).send('Invalid password');
+			if(!validPass) return res.status(422).json({message:'Invalid password'});
 
 
 			// create and assign a token for user

@@ -20,14 +20,13 @@ exports.register= async(req,res)=>{
 
 			const {error} = schema.validate(req.body);
 
-			if(error) return res.status(400).send(error.details[0].message);
+			if(error) return res.status(422).json({message:error.details[0].message});
 
 			//check whether the user is in database or not
 
 			const emailExist=await Teacher.findOne({email:req.body.email});
 
-			if(emailExist) return res.status(400).send('Email already exist');
-
+			if(emailExist) return res.status(422).json({message:'Email already exist'});
 
 			// now hased the password before saving the user
 
@@ -46,10 +45,13 @@ exports.register= async(req,res)=>{
 
 				try{
 					const savedTeacher= await teacher.save();
-					res.json({mesaage:'user created successfully',savedTeacher:savedTeacher});
+					res.status(201).json({mesaage:'Teacher created successfully',savedTeacher:savedTeacher});
 				}
 				catch(err){
-					res.status(400).send(err);
+					if(!err.statusCode){
+						err.statusCode=500;
+						next(err);
+					}
 				}
 
  };
@@ -61,20 +63,21 @@ exports.register= async(req,res)=>{
 
 			const {error} = schema.validate(req.body);
 
-			if(error) return res.status(400).send(error.details[0].message);
+			if(error) return res.status(422).json({message:error.details[0].message});
 
 			//check whether the user is in database or not
 
 			const teacher=await Teacher.findOne({email:req.body.email});
 
-			if(!teacher) return res.status(400).send('Email or password doesnot matches');
+			if(!teacher) return res.status(422).json({message:'Email or password doesnot matches'});
 
 			//check whether password matches or not
 
 			const validPass=await bcrypt.compare(req.body.password,teacher.password);
 
-			if(!validPass) return res.status(400).send('Invalid password');
+			// if(!validPass) return res.status(422).send('Invalid password');
 
+			 if(!validPass) return res.status(422).json({message:'Invalid password'});
 
 			// create and assign a token for user
 

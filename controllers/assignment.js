@@ -7,14 +7,20 @@ const mongoose=require('mongoose');
 
 exports.getAssignments=async(req,res,next)=>{
 	try{
+
 	const assignments=await Assignment.find({creator:mongoose.Types.ObjectId(req.user._id)});
-	console.log(assignments);
-	res.json({message:'Assignmensts fetch successfully',assignments:assignments});
-		console.log('Hey iam working successfully');
+		// console.log(assignments);
+
+	res.status(200).json({message:'Assignmensts fetch successfully',assignments:assignments});
+	// console.log('Hey iam working successfully');
 
 	}
 	catch(err){
-	console.log(err);
+	if(!err.statusCode){
+		err.statusCode=500
+		next(err);
+
+	}
 }
 };
 
@@ -24,14 +30,20 @@ exports.addAssignment=async(req,res,next)=>{
 	// const semester=req.body.semester;
 	// const shift=req.body.shift;
 	// const assignmentURL=req.body.assignmentURL;
-	const {name,subject,semester,shift,assignmentURL,department}=req.body;
+	const {name,subject,semester,shift,assignmentURL,department}=req.body
+		// const file=req.file;
+
+	const selectedFile=req.file;
+
+	const URL=selectedFile.path;
+
 	const assignment=new Assignment({
 		name:name,
 		subject:subject,
 		department:department,
 		semester:semester,
 		shift:shift,
-		assignmentURL:assignmentURL,
+		assignmentURL:URL,
 		creator:req.user._id
 
 	});
@@ -40,17 +52,28 @@ exports.addAssignment=async(req,res,next)=>{
 		// var id = mongoose.Types.ObjectId('req.user._id');
 		// const teacher= await Teacher.findOne({_id:id});
 		const teacher=await Teacher.findById(req.user);
-		console.log(teacher);
-		console.log(req.user._id);		
+		if(!teacher){
+			const error=new Error('Teacher not found');
+
+			error.statusCode=404;
+
+			throw error;
+		}
+		// console.log(teacher);
+		// console.log(req.user._id);		
 		if (!Array.isArray(teacher.assignment)) {
     		teacher.assignment = [];
 		}
 		teacher.assignment.push(assignment);
 		await teacher.save();
-		res.json({message:'Assignment created successfully',assignment:assignment});
+		res.status(201).json({message:'Assignment created successfully',assignment:assignment});
 	}
 	catch(err){
-		console.log(err);
+		// console.log(err);
+		if(!err.statusCode){
+			err.statusCode=500;
+			next(err);
+		}
 	}
 	
 };
@@ -61,17 +84,27 @@ exports.getAssignment= async (req,res,next)=>{
 	try{
 	const assignment=await Assignment.findById(assignmentId);
 		if(!assignment){
-			console.log('Assigment cant be fetched');
+			//console.log('Assigment cant be fetched');
+			const error=new Error('Assignment Not Found');
+
+			error.statusCode=404;
 		}
 		if (assignment.creator.toString()!==req.user._id.toString())
 		{
-			console.log('This assignment is not belongs to you')
+			// console.log('This assignment is not belongs to you')
+			const error=new Error('You are not authorized');
+			error.statusCode=403;
+			throw error;
 		}
-		res.json({message:'Assignment fetched successfully',assignment:assignment});
+		res.status(200).json({message:'Assignment fetched successfully',assignment:assignment});
 	}
 	catch(err)
 	{
-	console.log(err);
+		if(!err.statusCode){
+			err.statusCode=500;
+			next(err);
+		}
+
 	}
 };
 
@@ -82,14 +115,24 @@ exports.editAssignment= async (req,res,next)=>{
 	const semester=req.body.semester;
 	const department=req.body.department;
 	const shift=req.body.shift;
-	const assignmentURL=req.body.assignmentURL;
+	const assignmentURL=req.file.path;
 	try{
 	const assignment=await Assignment.findById(assignmentId)
 		if(!assignment){
-			console.log(err);
+			// console.log(err);
+			const error=new Error('Assignment not found');
+			error.statusCode=404;
+			throw error;
+
 		}
 		if(assignment.creator.toString()!==req.user._id.toString()){
-			console.log('You are not authorized');
+			// console.log('You are not authorized');
+			const error=new Error('You are not authorized');
+
+			error.statusCode=403;
+
+			throw error;
+
 		}
 		assignment.assignment_name=assignment_name;
 		assignment.subject=subject;
@@ -98,10 +141,14 @@ exports.editAssignment= async (req,res,next)=>{
 		assignment.shift=shift;
 		assignment.assignmentURL=assignmentURL;
 		const result = await assignment.save();
-		res.json({message:'Assignment updated successfully',assignment:result});
+		res.status(201).json({message:'Assignment updated successfully',assignment:result});
 	}
 	catch(err){
-			console.log(err);
+			// console.log(err);
+			if(!err.statusCode){
+				err.statusCode=500;
+				next(err);
+			}
 
 	}
 };
@@ -111,14 +158,22 @@ exports.deleteAssignment=async(req,res,next)=>{
 	try{
 	const assignment=await Assignment.findById(assignmentId)
 		if(!assignment){
-			console.log(err);
+			const error=new Error('Assignment not found');
+
+			error.statusCode=404;
+
+			throw error;
 		}
 		await Assignment.deleteOne({_id:assignmentId,creator:req.user._id});
-		res.json({message:'Assigment Deleted successfully'});
-		console.log('successfully deleted');
+		res.status(200).json({message:'Assigment Deleted successfully'});
+		// console.log('successfully deleted');
 	}
 	catch(err){
-				console.log(err);
+				// console.log(err);
+		if(!err.statusCode){
+				err.statusCode=500;
+				next(err);
+			}
 
 	}
 };
