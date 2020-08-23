@@ -57,12 +57,10 @@ const studentSchema=new Schema({
 
 });
 
-studentSchema.methods.addToMyList=function(assignment){
 
-	
+// studentSchema.methods.addToMyList=function(assignment){
 
-
-};
+// };
 
 module.exports=mongoose.model('Student',studentSchema);
 

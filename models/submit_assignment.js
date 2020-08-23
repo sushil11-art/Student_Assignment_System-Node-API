@@ -14,9 +14,10 @@ const submitSchema=new Schema({
 		required:true,
 		ref:'Asssignment'
 	},
-	// date:{
-	// 	type:Date.now
-	// }
+	pdfURL:{
+		type:String,
+		required:true,
+	},
 	teacher:{
 		type:Schema.Types.ObjectId,
 		require:true,

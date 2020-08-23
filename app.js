@@ -14,7 +14,7 @@ const multer=require('multer');
 
 const app=express();
 
-
+//multer file storage
 const fileStorage=multer.diskStorage({
 	destination:(req,file,cb)=>{
 		cb(null,path.join(__dirname,'/uploads'))

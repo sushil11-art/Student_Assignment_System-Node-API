@@ -1,6 +1,7 @@
 
 const Assignment=require('../models/assignment');
 const Student=require('../models/student');
+const Sumbit=require('../models/submit_assignment');
 const mongoose=require('mongoose');
 
 exports.assignmentList= async(req,res,next)=>{
@@ -68,7 +69,7 @@ exports.addToMyList=async(req,res,next)=>{
 		await student.save();
 		res.status(201).json({message:'Assignment added successfull to my list',assignment:assignment});
 		}
-		res.json({message:'You have already added this assignment'})	;
+		res.json({message:'You have already added this assignment'});
 	
 		}
 		catch(err){
@@ -114,7 +115,7 @@ exports.deleteFromMyList=async(req,res,next)=>{
 		if (!student){
 	 // return res.status(404).json({message:'User not found'});
 
-		const error =Error('User not found');
+		const error =Error('Student not found');
 		error.statusCode=404;
 		throw error;
 		}
@@ -124,7 +125,7 @@ exports.deleteFromMyList=async(req,res,next)=>{
 		// console.log(assignments);
 		student.my_assignments.assignments=[...assignments];
 		await student.save();
-		res.status(200).json({message:'Post deleted successfully'}); 		
+		res.status(200).json({message:'Assignment deleted successfully'}); 		
 	}
 	catch(err){
 		if(!err.statusCode){
@@ -133,5 +134,121 @@ exports.deleteFromMyList=async(req,res,next)=>{
 			}	}
 
 };
+
+exports.submitAssignment=async(req,res,next)=>{
+
+	const assignmentId=req.params.assignmentId;
+	const selectedFile=req.file;
+	const URL=selectedFile.path;
+	try{
+		const student=await Student.findOne({_id:req.user});
+		if (!student){
+			const error=new Error('Student not found');
+			error.statusCode=404;
+			throw error;
+		}
+		const assignment=await Assignment.findById(assignmentId)
+
+		//console.log(assignment.creator)
+
+		if (!assignment)
+		{
+			const error=new Error('Submission date passed on ');
+			error.status=404;
+			throw error;
+		}
+		const myList=await Sumbit.find({student:req.user._id,assignment:assignmentId});
+				console.log(myList);
+
+		if(!(myList===undefined || myList.length==0)){
+			const error=new Error('You have already submitted this assignment');
+			error.status=400;
+			throw error;
+		}
+		// console.log(prevousList); 
+		const submit=new Sumbit({
+			student:req.user._id,
+			assignment:assignmentId,
+			pdfURL:URL,
+			teacher:assignment.creator
+		});
+		await submit.save()
+		res.status(201).json({message:'You have successfully submitted the assignment',submit:submit});
+		
+	}
+	catch(err){
+		if (!err.statusCode){
+			err.statusCode=500;
+			next(err);
+		}
+		// console.log(err);
+	}
+
+};
+
+exports.getSubmitList=async(req,res,next)=>{
+
+	try{
+		const submitList=await Sumbit.find({student:req.user._id});
+		console.log(submitList);
+		if(!submitList){
+			const error=new Error('You dont have any submitted assignments');
+			error.statusCode=404;
+			throw error;
+		}
+		res.status(200).json({message:'List of submitted assignments',submitList:submitList});
+
+	}
+	catch(err){
+		if(!err.statusCode){
+			err.statusCode=500
+			next(err);
+		}
+
+	}
+
+};
+
+exports.editSubmission=async(req,res,next)=>{
+
+	const submitId=req.params.submitId;
+
+	try{
+		const student=await Student.findOne({_id:req.user});
+
+		if (!student){
+	 // return res.status(404).json({message:'User not found'});
+
+		const error =Error('Student not found');
+		error.statusCode=404;
+		throw error;
+		}
+		const assignment=await Submit.findById(submitId);
+		///
+
+		if(!assignment){
+			const error=new Error('Submitted assignment not found')
+			error.statusCode=404;
+			throw error;
+		}
+		assignment.
+
+		res.status(200).json({message});
+
+	}
+	catch(err){
+		if(!err.statusCode){
+			err.statusCode=500
+			next(err);
+		}
+
+	}
+
+	}
+
+
+
+
+
 
 
