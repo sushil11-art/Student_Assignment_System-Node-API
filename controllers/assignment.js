@@ -5,6 +5,8 @@ const Teacher=require('../models/teacher');
 
 const mongoose=require('mongoose');
 
+const Submit=require('../models/submit_assignment');
+
 exports.getAssignments=async(req,res,next)=>{
 	try{
 
@@ -177,6 +179,36 @@ exports.deleteAssignment=async(req,res,next)=>{
 
 	}
 };
+
+//get list of all assignments submitted by students
+//for now i will get all the list later i will filter according to needs. 
+
+exports.getSubmittedList=async(req,res,next)=>{
+	try{
+
+		const submittedList=await Submit.find({'teacher.teacherId':req.user._id});
+		if(!submittedList){
+			const error=new Error('No assignment was submiteed till now');
+			error.statusCode=404;
+			throw error;		
+		}
+		res.status(201).json({message:'List of submitted assignments for you',submittedList:submittedList});
+
+	}
+	catch(err){
+	if(!err.statusCode){
+				err.statusCode=500;
+				next(err);
+			}
+
+	}
+
+};
+
+
+
+
+//
 
 
 // exports.deleteAssignment=(req,res,next)=>{

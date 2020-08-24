@@ -184,7 +184,10 @@ exports.submitAssignment=async(req,res,next)=>{
 			assignment:{
 			name:assignment.name,
 			subject:assignment.subject,
-				assignmentId:mongoose.Types.ObjectId(assignmentId)
+			department:assignment.department,
+			semester:assignment.semester,
+			shift:assignment.shift,
+			assignmentId:mongoose.Types.ObjectId(assignmentId)
 			},
 			pdfURL:URL,
 			teacher:{
