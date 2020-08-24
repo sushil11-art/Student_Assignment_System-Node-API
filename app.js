@@ -71,7 +71,9 @@ app.use((error,req,res,next)=>{
 
 });
 
-mongoose.connect(process.env.DB_CONNECT,{useNewUrlParser:true}).then(result=>{
+mongoose.connect(process.env.DB_CONNECT,{useNewUrlParser:true,useUnifiedTopology: true,
+useFindAndModify: false,
+}).then(result=>{
 	console.log('connected to db')
 	console.log('api is running on port 4000')
 	app.listen(4000);

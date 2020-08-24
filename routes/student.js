@@ -29,7 +29,7 @@ router.post('/submit/:assignmentId',verifyStudent,studentControllers.submitAssig
 
 //edit the submitted assignment
 
-router.put('/edit/:submitId',verifyStudent,studentControllers.editSubmission);
+router.patch('/edit/:submitId',verifyStudent,studentControllers.editSubmission);
 
 //get list of submitted assignment
 

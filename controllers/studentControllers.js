@@ -1,7 +1,9 @@
 
 const Assignment=require('../models/assignment');
 const Student=require('../models/student');
-const Sumbit=require('../models/submit_assignment');
+const Submit=require('../models/submit_assignment');
+const Teacher=require('../models/teacher');
+
 const mongoose=require('mongoose');
 
 exports.assignmentList= async(req,res,next)=>{
@@ -115,7 +117,7 @@ exports.deleteFromMyList=async(req,res,next)=>{
 		if (!student){
 	 // return res.status(404).json({message:'User not found'});
 
-		const error =Error('Student not found');
+		const error =new Error('Student not found');
 		error.statusCode=404;
 		throw error;
 		}
@@ -136,7 +138,6 @@ exports.deleteFromMyList=async(req,res,next)=>{
 };
 
 exports.submitAssignment=async(req,res,next)=>{
-
 	const assignmentId=req.params.assignmentId;
 	const selectedFile=req.file;
 	const URL=selectedFile.path;
@@ -147,30 +148,43 @@ exports.submitAssignment=async(req,res,next)=>{
 			error.statusCode=404;
 			throw error;
 		}
-		const assignment=await Assignment.findById(assignmentId)
-
-		//console.log(assignment.creator)
-
-		if (!assignment)
-		{
+		const assignment=await Assignment.findById(assignmentId);
+		if (!assignment){
 			const error=new Error('Submission date passed on ');
 			error.status=404;
 			throw error;
 		}
-		const myList=await Sumbit.find({student:req.user._id,assignment:assignmentId});
-				console.log(myList);
-
+		//console.log(assignment.creator)
+		const teacherId=assignment.creator
+		const teacher=await Teacher.findById(teacherId);
+		const myList=await Submit.find({'assignment.assignmentId':assignmentId,'student.studentId':req.user._id});
+		// console.log(myList);
 		if(!(myList===undefined || myList.length==0)){
 			const error=new Error('You have already submitted this assignment');
 			error.status=400;
 			throw error;
 		}
-		// console.log(prevousList); 
-		const submit=new Sumbit({
-			student:req.user._id,
-			assignment:assignmentId,
+		const submit=new Submit({
+			student:{
+			name:student.name,
+			email:student.email,
+			department:student.department,
+			semester:student.semester,
+			college_rollno:student.college_rollno,
+			shift:student.shift,
+				name:assignment.name,
+				studentId:mongoose.Types.ObjectId(req.user._id)
+			},
+			assignment:{
+			subject:assignment.subject,
+				assignmentId:mongoose.Types.ObjectId(assignmentId)
+			},
 			pdfURL:URL,
-			teacher:assignment.creator
+			teacher:{
+			name:teacher.name,
+			email:teacher.email,
+			teacherId:mongoose.Types.ObjectId(teacherId)
+				}
 		});
 		await submit.save()
 		res.status(201).json({message:'You have successfully submitted the assignment',submit:submit});
@@ -181,15 +195,14 @@ exports.submitAssignment=async(req,res,next)=>{
 			err.statusCode=500;
 			next(err);
 		}
-		// console.log(err);
 	}
-
 };
 
-exports.getSubmitList=async(req,res,next)=>{
+	
 
+exports.getSubmitList=async(req,res,next)=>{
 	try{
-		const submitList=await Sumbit.find({student:req.user._id});
+		const submitList=await Submit.find({'student.studentId':req.user._id});
 		console.log(submitList);
 		if(!submitList){
 			const error=new Error('You dont have any submitted assignments');
@@ -213,29 +226,23 @@ exports.editSubmission=async(req,res,next)=>{
 
 	const submitId=req.params.submitId;
 
-	try{
-		const student=await Student.findOne({_id:req.user});
+	const selectedFile=req.file;
 
-		if (!student){
-	 // return res.status(404).json({message:'User not found'});
+	const URL=selectedFile.path;
 
-		const error =Error('Student not found');
-		error.statusCode=404;
-		throw error;
-		}
-		const assignment=await Submit.findById(submitId);
-		///
+	try{	
+		const submit=await Submit.findOneAndUpdate({_id:submitId,'student.studentId':req.user._id},{
+			$set:{
+				pdfURL:URL
+			}
+		},{upsert:true});
 
-		if(!assignment){
-			const error=new Error('Submitted assignment not found')
-			error.statusCode=404;
-			throw error;
-		}
-		assignment.
+		// const submit =await Submit.find({_id:submitId});
+		// submit.pdfURL=URL;
+		await submit.save();
 
-		res.status(200).json({message});
-
-	}
+	res.status(201).json({message:'You have successfully edited the assignment'});
+}
 	catch(err){
 		if(!err.statusCode){
 			err.statusCode=500
@@ -243,8 +250,7 @@ exports.editSubmission=async(req,res,next)=>{
 		}
 
 	}
-
-	}
+};
 
 
 
