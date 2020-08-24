@@ -43,8 +43,6 @@ exports.addAssignment=async(req,res,next)=>{
 	});
 	try{
 		await assignment.save();
-		// var id = mongoose.Types.ObjectId('req.user._id');
-		// const teacher= await Teacher.findOne({_id:id});
 		const teacher=await Teacher.findById(req.user);
 		if(!teacher){
 			const error=new Error('Teacher not found');
@@ -104,12 +102,13 @@ exports.getAssignment= async (req,res,next)=>{
 
 exports.editAssignment= async (req,res,next)=>{
 	const assignmentId=req.params.assignmentId;
-	const assignment_name=req.body.assignment_name;
+	const name=req.body.name;
 	const subject=req.body.subject;
 	const semester=req.body.semester;
 	const department=req.body.department;
 	const shift=req.body.shift;
-	const assignmentURL=req.file.path;
+	const selectedFile=req.file;
+	const URL=selectedFile.path;
 	try{
 	const assignment=await Assignment.findById(assignmentId)
 		if(!assignment){
@@ -128,12 +127,12 @@ exports.editAssignment= async (req,res,next)=>{
 			throw error;
 
 		}
-		assignment.assignment_name=assignment_name;
+		assignment.name=name;
 		assignment.subject=subject;
 		assignment.semester=semester;
 		assignment.department=department;
 		assignment.shift=shift;
-		assignment.assignmentURL=assignmentURL;
+		assignment.assignmentURL=URL;
 		const result = await assignment.save();
 		res.status(201).json({message:'Assignment updated successfully',assignment:result});
 	}
