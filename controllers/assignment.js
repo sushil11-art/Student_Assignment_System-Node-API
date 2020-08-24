@@ -186,12 +186,12 @@ exports.deleteAssignment=async(req,res,next)=>{
 exports.getSubmittedList=async(req,res,next)=>{
 	try{
 
-		const submittedList=await Submit.find({'teacher.teacherId':req.user._id});
-		if(!submittedList){
-			const error=new Error('No assignment was submiteed till now');
-			error.statusCode=404;
-			throw error;		
-		}
+		const submittedList=await Submit.find();
+		// if(!submittedList){
+		// 	const error=new Error('No assignment was submiteed till now');
+		// 	error.statusCode=404;
+		// 	throw error;		
+		// }
 		res.status(201).json({message:'List of submitted assignments for you',submittedList:submittedList});
 
 	}
@@ -205,7 +205,12 @@ exports.getSubmittedList=async(req,res,next)=>{
 
 };
 
+exports.submitFeedback=async(req,res,next)=>{
 
+	const submitId=req.params.submitId  
+
+
+}
 
 
 //

@@ -20,6 +20,7 @@ router.put('/edit_assignment/:assignmentId',verifyTeacher,assignmentController.e
 //delete assignment
 router.delete('/delete_assignment/:assignmentId',verifyTeacher,assignmentController.deleteAssignment);
 
-router.get('/submittedList',verifyTeacher,assignmentController.getSubmittedList);
+// get list of all assignments submitted by students
+router.get('/List',verifyTeacher,assignmentController.getSubmittedList);
 
 module.exports=router;
