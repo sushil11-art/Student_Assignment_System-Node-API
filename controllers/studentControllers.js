@@ -35,6 +35,8 @@ exports.assignmentList= async(req,res,next)=>{
 			}	}
 };
 
+//add assigment to my list 
+
 exports.addToMyList=async(req,res,next)=>{
 
 	const assignmentId=req.params.assignmentId;
@@ -81,7 +83,7 @@ exports.addToMyList=async(req,res,next)=>{
 			}}
 };
 
-
+//get assignment added to my list
 
 exports.addedAssignmentList=async(req,res,next)=>{
 	try{
@@ -110,6 +112,8 @@ catch(err){
 			}}
 };
 
+//delete from my list
+
 exports.deleteFromMyList=async(req,res,next)=>{
 	const assignmentId=req.params.assignmentId;
 	try{
@@ -136,6 +140,8 @@ exports.deleteFromMyList=async(req,res,next)=>{
 			}	}
 
 };
+
+//submit assignment to teacher
 
 exports.submitAssignment=async(req,res,next)=>{
 	const assignmentId=req.params.assignmentId;
@@ -176,6 +182,7 @@ exports.submitAssignment=async(req,res,next)=>{
 				studentId:mongoose.Types.ObjectId(req.user._id)
 			},
 			assignment:{
+			name:assignment.name,
 			subject:assignment.subject,
 				assignmentId:mongoose.Types.ObjectId(assignmentId)
 			},
@@ -252,6 +259,29 @@ exports.editSubmission=async(req,res,next)=>{
 	}
 };
 
+exports.deleteSubmission=async(req,res,next)=>{
+	const submitId=req.params.submitId;
+	try{
+		const submit =await Submit.findById(submitId);
+
+		if (!submit){
+			const error=new Error('Assignment not found ');
+			error.statusCode=404;
+			throw error;
+		}
+		await Submit.deleteOne({_id:submitId,'student.studentId':req.user._id});
+
+		res.status(201).json({message:'You have successfully deleted the submitted assignment'});
+	}
+	catch(err){
+
+		if(!err.statusCode){
+			err.statusCode=500
+			next(err);
+		}
+	}
+
+};
 
 
 

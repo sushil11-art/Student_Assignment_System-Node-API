@@ -35,5 +35,9 @@ router.patch('/edit/:submitId',verifyStudent,studentControllers.editSubmission);
 
 router.get('/submitList',verifyStudent,studentControllers.getSubmitList);
 
+//delete submitted assignment
+
+router.delete('/remove/:submitId',verifyStudent,studentControllers.deleteSubmission);
+
 
 module.exports=router;
