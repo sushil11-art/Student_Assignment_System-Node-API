@@ -3,15 +3,6 @@ const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 
 const submitSchema=new Schema({
-
-	// student:{
-	// 	type:Schema.Types.ObjectId,
-	// 	required:true	
-	// },
-	// assignment:{
-	// 	type:Schema.Types.ObjectId,
-	// 	required:true
-	// },
 	student:{
 		name:{
 		type:String,
@@ -68,7 +59,7 @@ const submitSchema=new Schema({
 		type:Schema.Types.ObjectId,
 		required:true,
 		ref:'Asssignment'
-	}
+		}
 	},
 	pdfURL:{
 		type:String,

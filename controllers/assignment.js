@@ -27,24 +27,16 @@ exports.getAssignments=async(req,res,next)=>{
 };
 
 exports.addAssignment=async(req,res,next)=>{
-	// const name=req.body.name;
-	// const subject=req.body.subject;
-	// const semester=req.body.semester;
-	// const shift=req.body.shift;
-	// const assignmentURL=req.body.assignmentURL;
-	const {name,subject,semester,shift,assignmentURL,department}=req.body
-		// const file=req.file;
-
 	const selectedFile=req.file;
 
 	const URL=selectedFile.path;
 
 	const assignment=new Assignment({
-		name:name,
-		subject:subject,
-		department:department,
-		semester:semester,
-		shift:shift,
+		name:req.body.name,
+		subject:req.body.subject,
+		department:req.body.department,
+		semester:req.body.semester,
+		shift:req.body.shift,
 		assignmentURL:URL,
 		creator:req.user._id
 
@@ -187,6 +179,7 @@ exports.getSubmittedList=async(req,res,next)=>{
 	try{
 
 		const submittedList=await Submit.find();
+		console.log(submittedList);
 		// if(!submittedList){
 		// 	const error=new Error('No assignment was submiteed till now');
 		// 	error.statusCode=404;

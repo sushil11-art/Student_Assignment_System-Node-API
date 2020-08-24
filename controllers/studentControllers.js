@@ -178,8 +178,7 @@ exports.submitAssignment=async(req,res,next)=>{
 			semester:student.semester,
 			college_rollno:student.college_rollno,
 			shift:student.shift,
-				name:assignment.name,
-				studentId:mongoose.Types.ObjectId(req.user._id)
+			studentId:mongoose.Types.ObjectId(req.user._id)
 			},
 			assignment:{
 			name:assignment.name,
@@ -194,7 +193,7 @@ exports.submitAssignment=async(req,res,next)=>{
 			name:teacher.name,
 			email:teacher.email,
 			teacherId:mongoose.Types.ObjectId(teacherId)
-				}
+			}
 		});
 		await submit.save()
 		res.status(201).json({message:'You have successfully submitted the assignment',submit:submit});
@@ -208,7 +207,6 @@ exports.submitAssignment=async(req,res,next)=>{
 	}
 };
 
-	
 
 exports.getSubmitList=async(req,res,next)=>{
 	try{
