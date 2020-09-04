@@ -100,6 +100,8 @@ exports.getAssignment= async (req,res,next)=>{
 	}
 };
 
+//mongodb+srv://Sushil:<password>@cluster0-ongpn.mongodb.net/test
+
 exports.editAssignment= async (req,res,next)=>{
 	const assignmentId=req.params.assignmentId;
 	const name=req.body.name;
