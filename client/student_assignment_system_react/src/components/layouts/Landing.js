@@ -16,8 +16,8 @@ import PropTypes from 'prop-types';
 import AccessibilityIcon from '@material-ui/icons/Accessibility';
 // import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
-
+// import Link from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -93,7 +93,7 @@ render(){
               <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button variant="contained" color="primary">
-                    Professor
+                   <Link to="/teacher">Professor</Link> 
                   </Button>
                 </Grid>
                 <Grid item>
@@ -158,6 +158,7 @@ Landing.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+// export default Landing;
 export default withStyles(styles)(Landing);
 // const useStyles = makeStyles((theme) => ({
 //   root: {
