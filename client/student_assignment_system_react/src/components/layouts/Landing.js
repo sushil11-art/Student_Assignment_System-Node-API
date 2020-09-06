@@ -22,7 +22,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="https://material-ui.com/" to="/">
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
@@ -157,47 +157,7 @@ render(){
 Landing.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
-// export default Landing;
 export default withStyles(styles)(Landing);
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-//   menuButton: {
-//     marginRight: theme.spacing(2),
-//   },
-//   title: {
-//     flexGrow: 1,
-//   },
-//    margin: {
-//     margin: theme.spacing(1),
-//   },
 
-// }));
-
-// export default function Landing() {
-//   const classes = useStyles();
-//   return (
-//     <AppBar position="static">
-//   <Toolbar>
-//     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-//       <MenuIcon />
-//     </IconButton>
-//     <Typography variant="h6" className={classes.title}>
-//       ASSIGNMENT SYSTEM 
-//     </Typography>
-//       <Fab variant="extended" size="small" className={classes.margin}>
-//         <NavigationIcon className={classes.extendedIcon} />
-//         <Link to="/teacher">Teacher</Link>
-//       </Fab>
-//       <Fab variant="extended" size="small" className={classes.margin}>
-//         <NavigationIcon className={classes.extendedIcon} />
-//         <Link to="/teacher">Student</Link>
-//       </Fab>
-//   </Toolbar>
-// </AppBar>
-//   );
-// }
 
 

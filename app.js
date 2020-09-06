@@ -4,6 +4,8 @@ const mongoose=require('mongoose');
 
 const path=require('path');
 
+const cors=require('cors');
+
 const dotenv=require('dotenv');
 
 dotenv.config();
@@ -44,13 +46,14 @@ app.use(multer({storage:fileStorage}).single('selectedFile'));
 //app.use('/uploads',express.static(path.join(__dirname,'uploads')));
 
 //cors
-app.use((req,res,next)=>{
-	res.setHeader('Access-Control-Allow-Origin','*');
-	res.setHeader('Access-Control-Allow-Methods','GET,PUT,PATCH,DELETE,POST');
-	res.setHeader('Access-Control-Allow-Headers','Content-Type,Authorization');
-	next();
+app.use(cors());
+// app.use((req,res,next)=>{
+// 	res.setHeader('Access-Control-Allow-Origin','*');
+// 	res.setHeader('Access-Control-Allow-Methods','GET,PUT,PATCH,DELETE,POST');
+// 	res.setHeader('Access-Control-Allow-Headers','Content-Type,Authorization');
+// 	next();
 
-});
+// });
 
 //required apis
 

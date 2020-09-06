@@ -81,7 +81,7 @@ exports.register= async(req,res)=>{
 
 			// create and assign a token for user
 
-			const token=jwt.sign({_id:teacher._id},process.env.TOKEN_SECRET)
+			const token=jwt.sign({_id:teacher._id,name:teacher.name,expiresIn:32432423423},process.env.TOKEN_SECRET)
 
 			res.header('auth-token',token).send(token);
 
