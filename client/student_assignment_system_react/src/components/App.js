@@ -11,23 +11,23 @@ import store from '../store';
 import {Provider} from 'react-redux';
 import PrivateRoute from './PrivateRoute/PrivateRoute';
 import Dashboard from './Teacher/index';
-import AddAssignment from './Teacher/AddAssignment';
-import Logout from './Teacher/Logout';
+// import AddAssignment from './Teacher/AddAssignment';
+// import Logout from './Teacher/Logout';
 import setAuthToken from '../util/setAuthToken';
 import jwt_decode from 'jwt-decode';
 import { setCurrentUser, logoutUser } from '../actions';
 
-if (localStorage.jwtToken){
-	const token=localStorage.jwtToken;
-	setAuthToken(token);
-	const decoded=jwt_decode(token);
-	store.dispatch(setCurrentUser(decoded));
-	const currentTime=Date.now() / 1000;
-	if (decoded.expiresIn < currentTime ){
-		store.dispatch(logoutUser());
-		window.location.href="./";
-	}
-}
+// if (localStorage.jwtToken){
+// 	const token=localStorage.jwtToken;
+// 	setAuthToken(token);
+// 	const decoded=jwt_decode(token);
+// 	store.dispatch(setCurrentUser(decoded));
+// 	const currentTime=Date.now() / 1000;
+// 	if (decoded.expiresIn < currentTime ){
+// 		store.dispatch(logoutUser());
+// 		window.location.href="./teacher/add";
+// 	}
+// }
 
 
 class App extends React.Component{
@@ -43,10 +43,7 @@ class App extends React.Component{
 			{/* Private route for teacher */}
 			<PrivateRoute>
 			<Dashboard />
-			<PrivateRoute exact path="/teacher/add" component={AddAssignment}/>
-			<PrivateRoute exact path="/teacher/logout" component={Logout} />
 			</PrivateRoute>
-
 			</Switch>
 			</div>
 			</Router>

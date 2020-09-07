@@ -83,7 +83,7 @@ exports.register= async(req,res)=>{
 
 			const token=jwt.sign({_id:teacher._id,name:teacher.name,expiresIn:32432423423},process.env.TOKEN_SECRET)
 
-			res.header('auth-token',token).send(token);
+			res.header('Authorization',token).send(token);
 
 			//res.send('User is logged in');
 

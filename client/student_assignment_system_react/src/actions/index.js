@@ -1,7 +1,7 @@
 // import axios from 'axios';
 import baseURL from '../api/baseURL';
 import history from '../history';
-import { GET_ERRORS, REGISTER_SUCCESS_TEACHER, LOGIN_TEACHER, SET_CURRENT_USER } from './type';
+import { GET_ERRORS, REGISTER_SUCCESS_TEACHER, SET_CURRENT_USER, ADD_ASSIGNMENT } from './type';
 import setAuthToken from '../util/setAuthToken';
 import jwt_decode from 'jwt-decode';
 
@@ -39,7 +39,7 @@ export const loginTeacher=(userData)=>{
             //set token to local storage
             localStorage.setItem('jwtToken',response.data);
             //set token to auth header
-            setAuthToken(response.data);
+            // setAuthToken(response.data);
             const decoded=jwt_decode(response.data)
             console.log(decoded);
             //set the current user
@@ -47,7 +47,7 @@ export const loginTeacher=(userData)=>{
             history.push('/teacher/add');
         }
         catch(error){
-            console.log(error.response)
+            console.log(error.response);
             dispatch({type:GET_ERRORS,payload:error.response.data});
         }
     };
@@ -66,5 +66,29 @@ export const logoutUser=()=>{
         localStorage.removeItem('jwtToken');
         setAuthToken(false);
         dispatch({});
+    };
+};
+
+export const addAssignment=(assignmentData)=>{
+    return async (dispatch)=>{
+
+        try{
+            const token =localStorage.getItem('jwtToken');          
+            console.log(token);
+        const response=await baseURL.post('/api/teacher/add_assignment',assignmentData,{
+            headers:{
+                'Authorization':token,
+                'Content-Type':'multipart/form-data'
+            }
+        });
+            console.log(response);
+            dispatch({type:ADD_ASSIGNMENT,payload:response.data.assignment});
+            history.push('/teacher/logout');
+        }
+        catch(error){
+            console.log(error);
+            // dispatch({type:GET_ERRORS,payload:error.response.data});
+        }
+
     };
 };
